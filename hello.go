@@ -1,8 +1,14 @@
 package main
 
-import "fmt"
-import "os"
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+	"os"
+	"time"
+)
+
+const monitoramentos = 3
+const delay = 5
 
 func main() {
 
@@ -49,7 +55,19 @@ func leComando() int {
 
 func iniciarMonitoramento() {
 	fmt.Println("Monitorando...")
-	site := "https://random-status-code.herokuapp.com/"
+	sites := []string{"https://random-status-code.herokuapp.com/",
+		"https://www.alura.com.br", "https://www.caelum.com.br"}
+
+	for i := 0; i < monitoramentos; i++ {
+		for i, site := range sites {
+			fmt.Println("Testando o site", i, ":", site)
+			testaSite(site)
+		}
+		time.Sleep(delay * time.Minute)
+	}
+	fmt.Println("")
+}
+func testaSite(site string) {
 	resp, _ := http.Get(site)
 
 	if resp.StatusCode == 200 {
